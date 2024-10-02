@@ -31,7 +31,7 @@ export default function Home() {
             setImage(value || null);
         });
         fetchAndWriteData(setData);
-    }, []);
+    }, [image, name, lastName]);
 
     useUpdateEffect(() => {
         (async () => {

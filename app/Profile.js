@@ -5,6 +5,7 @@ import { MaskedTextInput } from "react-native-mask-text";
 import CheckBox from 'expo-checkbox';
 import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
+import { useNavigation } from 'expo-router';
 
 export default function Profile() {
     const [name, setName] = useState("");
@@ -67,7 +68,7 @@ export default function Profile() {
         });
         // AsyncStorage.setItem('onboardingComplete', 'false');
     }, []);
-
+    const navigation = useNavigation()
     return (
         <KeyboardAvoidingView style={styles.page} behavior='position'><ScrollView>
             <Text style={styles.titleText}>Personal information</Text>
@@ -175,7 +176,7 @@ export default function Profile() {
                 <Text style={styles.nameText2}>Newsletter</Text>
             </View>
             <Pressable
-                onPress={() => deleteDataAndLogout()}
+                onPress={() => deleteDataAndLogout(navigation)}
                 style={({ pressed }) => [
                     {
                         backgroundColor: pressed
@@ -235,7 +236,7 @@ export default function Profile() {
     );
 }
 
-async function deleteDataAndLogout() {
+async function deleteDataAndLogout(navigation) {
     await AsyncStorage.removeItem('name');
     await AsyncStorage.removeItem('email');
     await AsyncStorage.removeItem('lastName');
@@ -246,11 +247,14 @@ async function deleteDataAndLogout() {
     await AsyncStorage.removeItem('notifySpecialOffers');
     await AsyncStorage.removeItem('notifyNewsletter');
     await AsyncStorage.removeItem('onboardingComplete');
-    router.replace('Onboarding');
+    navigation.reset({
+        index: 0,
+        routes: [{ name: 'Onboarding' }], // your stack screen name
+    });
 }
 
 function discardDataAndReload() {
-    router.replace('Home')
+    router.navigate('Home')
 }
 
 async function saveDataAndProceed(name, email, lastName, phoneNumber, image, notifyOrderStatuses, notifyPasswordChanges, notifySpecialOffers, notifyNewsletter) {
@@ -263,7 +267,7 @@ async function saveDataAndProceed(name, email, lastName, phoneNumber, image, not
     await AsyncStorage.setItem('notifyPasswordChanges', notifyPasswordChanges.toString());
     await AsyncStorage.setItem('notifySpecialOffers', notifySpecialOffers.toString());
     await AsyncStorage.setItem('notifyNewsletter', notifyNewsletter.toString());
-    router.replace('Home');
+    router.navigate('Home');
 }
 
 function validateEmail(email) {
