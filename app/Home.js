@@ -10,6 +10,8 @@ import debounce from 'lodash.debounce';
 
 const sections = ['starters', 'mains', 'desserts'];
 export default function Home() {
+    const [name, setName] = useState("");
+    const [lastName, setLastName] = useState("");
     const [image, setImage] = useState(null);
     const [data, setData] = useState(null);
     const [query, setQuery] = useState('');
@@ -19,6 +21,12 @@ export default function Home() {
     const [searchBarText, setSearchBarText] = useState('');
 
     useEffect(() => {
+        AsyncStorage.getItem('name').then((value) => {
+            setName(value);
+        });
+        AsyncStorage.getItem('lastName').then((value) => {
+            setLastName(value);
+        });
         AsyncStorage.getItem('image').then((value) => {
             setImage(value || null);
         });
@@ -74,10 +82,14 @@ export default function Home() {
                 <Pressable
                     onPress={() => router.navigate('Profile')}
                 >
-                    {image && <Image
+                    {image ? <Image
                         source={{ uri: image }}
                         style={styles.image}
-                    />}
+                    /> : <View style={styles.imagePlaceholder}>
+                        <Text style={styles.imageTextPlaceholder}>
+                            {(name ? name[0] : '') + (lastName ? lastName[0] : '')}
+                        </Text>
+                    </View>}
                 </Pressable>
             </View>
             <View style={styles.bannerComponent}>
@@ -309,5 +321,17 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: "bold",
         marginBottom: 20,
+    },
+    imagePlaceholder: {
+        backgroundColor: 'gray',
+        width: 50,
+        height: 50,
+        borderRadius: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    imageTextPlaceholder: {
+        color: 'white',
+        fontSize: 24,
     },
 });

@@ -256,8 +256,8 @@ function discardDataAndReload() {
 async function saveDataAndProceed(name, email, lastName, phoneNumber, image, notifyOrderStatuses, notifyPasswordChanges, notifySpecialOffers, notifyNewsletter) {
     await AsyncStorage.setItem('name', name);
     await AsyncStorage.setItem('email', email);
-    await AsyncStorage.setItem('lastName', lastName);
-    await AsyncStorage.setItem('phoneNumber', phoneNumber);
+    await AsyncStorage.setItem('lastName', lastName || '');
+    await AsyncStorage.setItem('phoneNumber', phoneNumber || '');
     await AsyncStorage.setItem('image', image || '');
     await AsyncStorage.setItem('notifyOrderStatuses', notifyOrderStatuses.toString());
     await AsyncStorage.setItem('notifyPasswordChanges', notifyPasswordChanges.toString());
